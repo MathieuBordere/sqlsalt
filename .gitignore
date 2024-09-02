@@ -1,0 +1,7 @@
+sqlite*
+*.a
+*.o
+*.dylib
+*.so
+*.la
+*.dSYM
