@@ -5,3 +5,5 @@ sqlite*
 *.so
 *.la
 *.dSYM
+testdir*
+testrunner.*
