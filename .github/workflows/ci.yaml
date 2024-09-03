@@ -19,10 +19,25 @@ jobs:
         run: sudo apt-get install -y build-essential libtool autoconf automake tcl-dev
 
       - name: Test veryquick
-        run: make -j $(nproc) && make veryquickcheck
+        run: |
+          make -j $(nproc) && make veryquickcheck
+          grep "errors out of" testrunner.log | awk -F" " '{if($1>0)exit 1}'
 
       - name: Test full
-        run: make -j $(nproc) && make check
+        run: |
+          make -j $(nproc) && make check
+          grep "errors out of" testrunner.log | awk -F" " '{if($1>0)exit 1}'
+
+      - name: Failure Artifact
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: sqlsalt-failure
+          path: |
+            testrunner.db
+            testrunner.log
 
       - name: Cleanup
+        if: ${{ always() }}
         run: make clean
+      
