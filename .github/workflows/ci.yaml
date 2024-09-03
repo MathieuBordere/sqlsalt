@@ -16,10 +16,13 @@ jobs:
         run: sudo apt-get update
 
       - name: Install dependencies
-        run: |
-          sudo apt-get install -y build-essential libtool autoconf automake tcl-dev
+        run: sudo apt-get install -y build-essential libtool autoconf automake tcl-dev
 
-      - name: Test
-        run: |
-          make -j $(nproc) && make check
-          make clean
+      - name: Test veryquick
+        run: make -j $(nproc) && make veryquickcheck
+
+      - name: Test full
+        run: make -j $(nproc) && make check
+
+      - name: Cleanup
+        run: make clean

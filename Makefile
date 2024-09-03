@@ -39,17 +39,29 @@ endif
 $(TARGET): sqlite $(SRC)
 	@$(DYNAMIC_COMPILE)
 
+BUILD_TESTFIXTURE = cd $(SQLITE_BUILD_DIR) && \
+	make $(JOBS) OPTS="-DSQLITE_EXTRA_INIT=sqlite3_register_sqlsaltvfs" LIBS="-L./.. -lsqlsalttest" testfixture
+
 .PHONY: check
 check: $(TARGET_TEST) sqlite
 ifeq ($(OS),Linux)
-	cd $(SQLITE_BUILD_DIR) && \
-	make $(JOBS) OPTS="-DSQLITE_EXTRA_INIT=sqlite3_register_sqlsaltvfs" LIBS="-L./.. -lsqlsalttest" testfixture
+	@$(BUILD_TESTFIXTURE)
 	export LD_LIBRARY_PATH=$(shell pwd) && ./$(SQLITE_BUILD_DIR)/testfixture $(SQLITE_SRC_DIR)/test/testrunner.tcl full
 else ifeq ($(OS),Darwin)
-	cd $(SQLITE_BUILD_DIR) && \
-	make $(JOBS) OPTS="-DSQLITE_EXTRA_INIT=sqlite3_register_sqlsaltvfs" LIBS="-L./.. -lsqlsalttest" testfixture
+	@$(BUILD_TESTFIXTURE)
 	install_name_tool -change libsqlsalttest.dylib $(shell pwd)/libsqlsalttest.dylib $(SQLITE_BUILD_DIR)/testfixture && \
 	./$(SQLITE_BUILD_DIR)/testfixture $(SQLITE_SRC_DIR)/test/testrunner.tcl full
+endif
+
+.PHONY: veryquickcheck
+veryquickcheck: $(TARGET_TEST) sqlite
+ifeq ($(OS),Linux)
+	@$(BUILD_TESTFIXTURE)
+	export LD_LIBRARY_PATH=$(shell pwd) && ./$(SQLITE_BUILD_DIR)/testfixture $(SQLITE_SRC_DIR)/test/testrunner.tcl veryquick
+else ifeq ($(OS),Darwin)
+	@$(BUILD_TESTFIXTURE)
+	install_name_tool -change libsqlsalttest.dylib $(shell pwd)/libsqlsalttest.dylib $(SQLITE_BUILD_DIR)/testfixture && \
+	./$(SQLITE_BUILD_DIR)/testfixture $(SQLITE_SRC_DIR)/test/testrunner.tcl veryquick 
 endif
 
 $(TARGET_TEST): sqlite $(SRC)

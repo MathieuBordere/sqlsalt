@@ -13,9 +13,9 @@
 
 #ifdef SQLSALT_DEBUG
   #include <stdio.h>
-  #define DEBUG_PRINTF(...) fprintf(stderr, __VA_ARGS__)
+  #define SQLSALT_DEBUG_PRINTF(...) fprintf(stderr, __VA_ARGS__)
 #else
-  #define DEBUG_PRINTF(...) ((void)0)
+  #define SQLSALT_DEBUG_PRINTF(...) ((void)0)
 #endif
 
 /*
@@ -167,7 +167,7 @@ static int sqlsaltClose(sqlite3_file *pFile){
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xClose(pFile);
-  DEBUG_PRINTF("close:%s rc:%d\n", p->zFName, rc);
+  SQLSALT_DEBUG_PRINTF("close:%s rc:%d\n", p->zFName, rc);
   return rc;
 }
 
@@ -184,7 +184,7 @@ static int sqlsaltRead(
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xRead(pFile, zBuf, iAmt, iOfst);
-  DEBUG_PRINTF("read:%s iAmt:%d offset:%lld rc:%d\n", p->zFName, iAmt, iOfst, rc);
+  SQLSALT_DEBUG_PRINTF("read:%s iAmt:%d offset:%lld rc:%d\n", p->zFName, iAmt, iOfst, rc);
   return rc;
 }
 
@@ -201,7 +201,7 @@ static int sqlsaltWrite(
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xWrite(pFile, zBuf, iAmt, iOfst);
-  DEBUG_PRINTF("write:%s iAmt:%d offset:%lld, rc:%d\n", p->zFName, iAmt, iOfst, rc);
+  SQLSALT_DEBUG_PRINTF("write:%s iAmt:%d offset:%lld, rc:%d\n", p->zFName, iAmt, iOfst, rc);
   return rc;
 }
 
@@ -213,7 +213,7 @@ static int sqlsaltTruncate(sqlite3_file *pFile, sqlite_int64 size){
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xTruncate(pFile, size);
-  DEBUG_PRINTF("truncate:%s size:%lld rc:%d\n", p->zFName, size, rc);
+  SQLSALT_DEBUG_PRINTF("truncate:%s size:%lld rc:%d\n", p->zFName, size, rc);
   return rc;
 }
 
@@ -225,7 +225,7 @@ static int sqlsaltSync(sqlite3_file *pFile, int flags){
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xSync(pFile, flags);
-  DEBUG_PRINTF("sync:%s flags:%d\n", p->zFName, flags);
+  SQLSALT_DEBUG_PRINTF("sync:%s flags:%d\n", p->zFName, flags);
   return rc;
 }
 
@@ -237,7 +237,7 @@ static int sqlsaltFileSize(sqlite3_file *pFile, sqlite_int64 *pSize){
   (void) p;
   pFile = ORIGFILE(p);
   int rc = pFile->pMethods->xFileSize(pFile, pSize);
-  DEBUG_PRINTF("filesize:%s size:%lld rc:%d\n", p->zFName, *pSize, rc);
+  SQLSALT_DEBUG_PRINTF("filesize:%s size:%lld rc:%d\n", p->zFName, *pSize, rc);
   return rc;
 }
 
@@ -250,7 +250,7 @@ static int sqlsaltLock(sqlite3_file *pFile, int eLock){
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xLock(pFile, eLock);
-  DEBUG_PRINTF("lock:%s elock:%d rc:%d\n", p->zFName, eLock, rc);
+  SQLSALT_DEBUG_PRINTF("lock:%s elock:%d rc:%d\n", p->zFName, eLock, rc);
   return rc;
 }
 
@@ -262,7 +262,7 @@ static int sqlsaltUnlock(sqlite3_file *pFile, int eLock){
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xUnlock(pFile, eLock);
-  DEBUG_PRINTF("unlock:%s elock:%d rc:%d\n", p->zFName, eLock, rc);
+  SQLSALT_DEBUG_PRINTF("unlock:%s elock:%d rc:%d\n", p->zFName, eLock, rc);
   return rc;
 }
 
@@ -274,7 +274,7 @@ static int sqlsaltCheckReservedLock(sqlite3_file *pFile, int *pResOut){
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xCheckReservedLock(pFile, pResOut);
-  DEBUG_PRINTF("check_reserved_lock:%s res:%d rc:%d\n", p->zFName, *pResOut, rc);
+  SQLSALT_DEBUG_PRINTF("check_reserved_lock:%s res:%d rc:%d\n", p->zFName, *pResOut, rc);
   return rc;
 }
 
@@ -286,7 +286,7 @@ static int sqlsaltFileControl(sqlite3_file *pFile, int op, void *pArg){
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xFileControl(pFile, op, pArg);
-  DEBUG_PRINTF("filecontrol:%s op:%d rc:%d\n", p->zFName, op, rc);
+  SQLSALT_DEBUG_PRINTF("filecontrol:%s op:%d rc:%d\n", p->zFName, op, rc);
   return rc;
 }
 
@@ -298,7 +298,7 @@ static int sqlsaltSectorSize(sqlite3_file *pFile){
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xSectorSize(pFile);
-  DEBUG_PRINTF("sectorsize:%s rc:%d\n", p->zFName, rc);
+  SQLSALT_DEBUG_PRINTF("sectorsize:%s rc:%d\n", p->zFName, rc);
   return rc;
 }
 
@@ -310,7 +310,7 @@ static int sqlsaltDeviceCharacteristics(sqlite3_file *pFile){
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xDeviceCharacteristics(pFile);
-  DEBUG_PRINTF("devicecharacteristics:%s rc:%d\n", p->zFName, rc);
+  SQLSALT_DEBUG_PRINTF("devicecharacteristics:%s rc:%d\n", p->zFName, rc);
   return rc;
 }
 
@@ -326,7 +326,7 @@ static int sqlsaltShmMap(
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xShmMap(pFile,iPg,pgsz,bExtend,pp);
-  DEBUG_PRINTF("shmmap:%s pg:%d pgsz:%d extend:%d rc:%d\n", p->zFName, iPg, pgsz, bExtend, rc);
+  SQLSALT_DEBUG_PRINTF("shmmap:%s pg:%d pgsz:%d extend:%d rc:%d\n", p->zFName, iPg, pgsz, bExtend, rc);
   return rc;
 }
 
@@ -336,7 +336,7 @@ static int sqlsaltShmLock(sqlite3_file *pFile, int offset, int n, int flags){
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xShmLock(pFile,offset,n,flags);
-  DEBUG_PRINTF("shmlock:%s offset:%d, n:%d flags:%d rc:%d\n", p->zFName, offset, n, flags, rc);
+  SQLSALT_DEBUG_PRINTF("shmlock:%s offset:%d, n:%d flags:%d rc:%d\n", p->zFName, offset, n, flags, rc);
   return rc;
 }
 
@@ -345,7 +345,7 @@ static void sqlsaltShmBarrier(sqlite3_file *pFile){
   sqlsaltFile *p = (sqlsaltFile *)pFile;
   (void) p;
   pFile = ORIGFILE(pFile);
-  DEBUG_PRINTF("shmbarrier:%s", p->zFName);
+  SQLSALT_DEBUG_PRINTF("shmbarrier:%s", p->zFName);
   pFile->pMethods->xShmBarrier(pFile);
 }
 
@@ -355,7 +355,7 @@ static int sqlsaltShmUnmap(sqlite3_file *pFile, int deleteFlag){
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xShmUnmap(pFile,deleteFlag);
-  DEBUG_PRINTF("shmunmap:%s deleteflag:%d rc:%d\n", p->zFName, deleteFlag, rc);
+  SQLSALT_DEBUG_PRINTF("shmunmap:%s deleteflag:%d rc:%d\n", p->zFName, deleteFlag, rc);
   return rc;
 }
 
@@ -370,7 +370,7 @@ static int sqlsaltFetch(
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xFetch(pFile, iOfst, iAmt, pp);
-  DEBUG_PRINTF("fetch:%s offset:%lld iamt:%d rc:%d\n", p->zFName, iOfst, iAmt, rc);
+  SQLSALT_DEBUG_PRINTF("fetch:%s offset:%lld iamt:%d rc:%d\n", p->zFName, iOfst, iAmt, rc);
   return rc;
 }
 
@@ -380,7 +380,7 @@ static int sqlsaltUnfetch(sqlite3_file *pFile, sqlite3_int64 iOfst, void *pPage)
   (void) p;
   pFile = ORIGFILE(pFile);
   int rc = pFile->pMethods->xUnfetch(pFile, iOfst, pPage);
-  DEBUG_PRINTF("unfetch:%s offset:%lld rc:%d\n", p->zFName, iOfst, rc);
+  SQLSALT_DEBUG_PRINTF("unfetch:%s offset:%lld rc:%d\n", p->zFName, iOfst, rc);
   return rc;
 }
 
@@ -405,7 +405,7 @@ static int sqlsaltOpen(
   pFile->pMethods = &sqlsalt_io_methods;
   int rc = pSubVfs->xOpen(pSubVfs, zName, pSubFile, flags, pOutFlags);
   p->zFName = zName;
-  DEBUG_PRINTF("open:%s flags:%d\n", zName, flags);
+  SQLSALT_DEBUG_PRINTF("open:%s flags:%d\n", zName, flags);
   return rc;
 }
 
@@ -414,7 +414,7 @@ static int sqlsaltOpen(
 */
 static int sqlsaltDelete(sqlite3_vfs *pVfs, const char *zPath, int dirSync){
   int rc = ORIGVFS(pVfs)->xDelete(ORIGVFS(pVfs), zPath, dirSync);
-  DEBUG_PRINTF("delete:%s dirsync:%d rc:%d\n", zPath, dirSync, rc);
+  SQLSALT_DEBUG_PRINTF("delete:%s dirsync:%d rc:%d\n", zPath, dirSync, rc);
   return rc;
 }
 static int sqlsaltAccess(
@@ -424,7 +424,7 @@ static int sqlsaltAccess(
   int *pResOut
 ){
   int rc = ORIGVFS(pVfs)->xAccess(ORIGVFS(pVfs), zPath, flags, pResOut);
-  DEBUG_PRINTF("access:%s flags:%d resout:%d rc:%d\n", zPath, flags, *pResOut, rc);
+  SQLSALT_DEBUG_PRINTF("access:%s flags:%d resout:%d rc:%d\n", zPath, flags, *pResOut, rc);
   return rc;
 }
 static int sqlsaltFullPathname(
@@ -434,43 +434,43 @@ static int sqlsaltFullPathname(
   char *zOut
 ){
   int rc = ORIGVFS(pVfs)->xFullPathname(ORIGVFS(pVfs),zPath,nOut,zOut);
-  DEBUG_PRINTF("fullpathgeertje:%s nout:%d out:%s rc:%d\n", zPath, nOut, zOut, rc);
+  SQLSALT_DEBUG_PRINTF("fullpath:%s nout:%d out:%s rc:%d\n", zPath, nOut, zOut, rc);
   return rc;
 }
 static void *sqlsaltDlOpen(sqlite3_vfs *pVfs, const char *zPath){
-  DEBUG_PRINTF("dlopen:%s\n", zPath);
+  SQLSALT_DEBUG_PRINTF("dlopen:%s\n", zPath);
   return ORIGVFS(pVfs)->xDlOpen(ORIGVFS(pVfs), zPath);
 }
 static void sqlsaltDlError(sqlite3_vfs *pVfs, int nByte, char *zErrMsg){
   ORIGVFS(pVfs)->xDlError(ORIGVFS(pVfs), nByte, zErrMsg);
-  DEBUG_PRINTF("dlerror:%s nbyte:%d\n", zErrMsg, nByte);
+  SQLSALT_DEBUG_PRINTF("dlerror:%s nbyte:%d\n", zErrMsg, nByte);
 }
 static void (*sqlsaltDlSym(sqlite3_vfs *pVfs, void *p, const char *zSym))(void){
-  DEBUG_PRINTF("dlsym\n");
+  SQLSALT_DEBUG_PRINTF("dlsym\n");
   return ORIGVFS(pVfs)->xDlSym(ORIGVFS(pVfs), p, zSym);
 }
 static void sqlsaltDlClose(sqlite3_vfs *pVfs, void *pHandle){
   ORIGVFS(pVfs)->xDlClose(ORIGVFS(pVfs), pHandle);
-  DEBUG_PRINTF("dlclose handle:%p\n", pHandle);
+  SQLSALT_DEBUG_PRINTF("dlclose handle:%p\n", pHandle);
 }
 static int sqlsaltRandomness(sqlite3_vfs *pVfs, int nByte, char *zBufOut){
   int rc = ORIGVFS(pVfs)->xRandomness(ORIGVFS(pVfs), nByte, zBufOut);
-  DEBUG_PRINTF("randomness nbyte:%d rc:%d\n", nByte, rc);
+  SQLSALT_DEBUG_PRINTF("randomness nbyte:%d rc:%d\n", nByte, rc);
   return rc;
 }
 static int sqlsaltSleep(sqlite3_vfs *pVfs, int nMicro){
   int rc = ORIGVFS(pVfs)->xSleep(ORIGVFS(pVfs), nMicro);
-  DEBUG_PRINTF("sleep micro:%d rc:%d\n", nMicro, rc);
+  SQLSALT_DEBUG_PRINTF("sleep micro:%d rc:%d\n", nMicro, rc);
   return rc;
 }
 static int sqlsaltCurrentTime(sqlite3_vfs *pVfs, double *pTimeOut){
   int rc = ORIGVFS(pVfs)->xCurrentTime(ORIGVFS(pVfs), pTimeOut);
-  DEBUG_PRINTF("currenttime:%lf rc:%d\n", *pTimeOut, rc);
+  SQLSALT_DEBUG_PRINTF("currenttime:%lf rc:%d\n", *pTimeOut, rc);
   return rc;
 }
 static int sqlsaltGetLastError(sqlite3_vfs *pVfs, int a, char *b){
   int rc = ORIGVFS(pVfs)->xGetLastError(ORIGVFS(pVfs), a, b);
-  DEBUG_PRINTF("getlasterror a:%d b:%s rc:%d\n", a, b, rc);
+  SQLSALT_DEBUG_PRINTF("getlasterror a:%d b:%s rc:%d\n", a, b, rc);
   return rc;
 }
 static int sqlsaltCurrentTimeInt64(sqlite3_vfs *pVfs, sqlite3_int64 *p){
@@ -484,7 +484,7 @@ static int sqlsaltCurrentTimeInt64(sqlite3_vfs *pVfs, sqlite3_int64 *p){
     rc = pOrig->xCurrentTime(pOrig, &r);
     *p = (sqlite3_int64)(r*86400000.0);
   }
-  DEBUG_PRINTF("currenttimeint64:%lld rc:%d\n", *p, rc);
+  SQLSALT_DEBUG_PRINTF("currenttimeint64:%lld rc:%d\n", *p, rc);
   return rc;
 }
 static int sqlsaltSetSystemCall(
@@ -498,11 +498,11 @@ static sqlite3_syscall_ptr sqlsaltGetSystemCall(
   sqlite3_vfs *pVfs,
   const char *zName
 ){
-    DEBUG_PRINTF("getsystemcall: %s\n", zName);
+    SQLSALT_DEBUG_PRINTF("getsystemcall: %s\n", zName);
     return ORIGVFS(pVfs)->xGetSystemCall(ORIGVFS(pVfs),zName);
 }
 static const char *sqlsaltNextSystemCall(sqlite3_vfs *pVfs, const char *zName){
-    DEBUG_PRINTF("nextsystemcall: %s\n", zName);
+    SQLSALT_DEBUG_PRINTF("nextsystemcall: %s\n", zName);
     return ORIGVFS(pVfs)->xNextSystemCall(ORIGVFS(pVfs), zName);
 }
 
