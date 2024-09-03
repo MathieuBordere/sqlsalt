@@ -285,6 +285,16 @@ static int sqlsaltFileControl(sqlite3_file *pFile, int op, void *pArg){
   sqlsaltFile *p = (sqlsaltFile*)pFile;
   (void) p;
   pFile = ORIGFILE(pFile);
+  if( op==SQLITE_FCNTL_PRAGMA ){
+    char **azArg = (char**)pArg;
+    assert( azArg[1]!=0 );
+    if( sqlite3_stricmp(azArg[1],"journal_mode")==0 ){
+      if( azArg[2] != 0 && sqlite3_stricmp(azArg[2], "wal")==0 ){
+        SQLSALT_DEBUG_PRINTF("attempt to enable wal mode\n");
+        return SQLITE_MISUSE;
+      }
+    }
+  }
   int rc = pFile->pMethods->xFileControl(pFile, op, pArg);
   SQLSALT_DEBUG_PRINTF("filecontrol:%s op:%d rc:%d\n", p->zFName, op, rc);
   return rc;
@@ -403,6 +413,10 @@ static int sqlsaltOpen(
   memset(p, 0, sizeof(*p));
   pSubFile = ORIGFILE(pFile);
   pFile->pMethods = &sqlsalt_io_methods;
+  if( flags & SQLITE_OPEN_WAL ){
+    SQLSALT_DEBUG_PRINTF("attempt to open wal file\n");
+    return SQLITE_MISUSE;
+  }
   int rc = pSubVfs->xOpen(pSubVfs, zName, pSubFile, flags, pOutFlags);
   p->zFName = zName;
   SQLSALT_DEBUG_PRINTF("open:%s flags:%d\n", zName, flags);
