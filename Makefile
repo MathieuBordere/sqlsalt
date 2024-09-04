@@ -40,7 +40,8 @@ $(TARGET): sqlite $(SRC)
 	@$(DYNAMIC_COMPILE)
 
 BUILD_TESTFIXTURE = cd $(SQLITE_BUILD_DIR) && \
-	make $(JOBS) OPTS="-DSQLITE_EXTRA_INIT=sqlite3_register_sqlsaltvfs" LIBS="-L./.. -lsqlsalttest" testfixture
+	make $(JOBS) OPTS="-DSQLITE_EXTRA_INIT=sqlite3_register_sqlsaltvfs -DSQLITE_OMIT_WAL" \
+	LIBS="-L./.. -lsqlsalttest" testfixture
 
 .PHONY: check
 check: $(TARGET_TEST) sqlite
